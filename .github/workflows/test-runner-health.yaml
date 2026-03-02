@@ -1,0 +1,48 @@
+name: Test Runner Health
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test-runner:
+    name: Test Runner Health Check
+    runs-on: self-hosted
+    steps:
+    - name: Test Git
+      run: |
+        echo "Testing Git..."
+        git --version
+        echo "Git OK"
+
+    - name: Test Docker
+      run: |
+        echo "Testing Docker..."
+        docker --version
+        docker info
+        echo "Docker OK"
+
+    - name: Test AWS CLI
+      run: |
+        echo "Testing AWS CLI..."
+        aws --version
+        aws sts get-caller-identity
+        echo "AWS CLI OK"
+
+    - name: Test kubectl
+      run: |
+        echo "Testing kubectl..."
+        kubectl version --client
+        kubectl cluster-info
+        echo "kubectl OK"
+
+    - name: Test jq
+      run: |
+        echo "Testing jq..."
+        jq --version
+        echo "jq OK"
+
+    - name: Summary
+      run: |
+        echo "# Runner Health Check Complete" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "All required tools are installed and working!" >> $GITHUB_STEP_SUMMARY
