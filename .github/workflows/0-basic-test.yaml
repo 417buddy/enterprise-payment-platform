@@ -1,0 +1,38 @@
+name: 0 - Basic Runner Test
+
+on:
+  workflow_dispatch:
+
+jobs:
+  basic-test:
+    name: Basic Runner Test
+    runs-on: self-hosted
+    steps:
+    - name: Step 1 - Echo Test
+      run: |
+        echo "Hello from GitHub Actions!"
+        echo "Runner OS: $RUNNER_OS"
+        echo "Runner Name: $RUNNER_NAME"
+
+    - name: Step 2 - Simple Command
+      run: |
+        pwd
+        ls -la
+        echo "Step 2 OK"
+
+    - name: Step 3 - Git Check
+      run: |
+        which git || echo "Git NOT FOUND"
+        git --version || echo "Git failed"
+        echo "Step 3 OK"
+
+    - name: Step 4 - Docker Check
+      run: |
+        which docker || echo "Docker NOT FOUND"
+        docker --version || echo "Docker failed"
+        echo "Step 4 OK"
+
+    - name: Step 5 - Success
+      run: |
+        echo "✅ All basic tests passed!"
+        echo "# Runner is Working" >> $GITHUB_STEP_SUMMARY
