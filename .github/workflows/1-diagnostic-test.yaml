@@ -1,0 +1,64 @@
+name: 1 - Diagnostic Test
+
+on:
+  workflow_dispatch:
+
+jobs:
+  diagnostic:
+    name: Diagnostic Test
+    runs-on: self-hosted
+    continue-on-error: true
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      continue-on-error: true
+
+    - name: Environment Info
+      run: |
+        echo "Runner OS: $RUNNER_OS"
+        echo "Runner Name: $RUNNER_NAME"
+        echo "Home: $HOME"
+        echo "PWD: $PWD"
+        whoami
+        id
+
+    - name: Tool Versions (Non-Failing)
+      run: |
+        echo "=== Git ==="
+        git --version || echo "Git check failed"
+        
+        echo "=== Docker ==="
+        docker --version || echo "Docker check failed"
+        docker ps || echo "Docker ps failed"
+        
+        echo "=== AWS ==="
+        aws --version || echo "AWS check failed"
+        aws sts get-caller-identity || echo "AWS identity check failed"
+        
+        echo "=== kubectl ==="
+        kubectl version --client || echo "kubectl check failed"
+        kubectl cluster-info || echo "kubectl cluster-info failed"
+        
+        echo "=== jq ==="
+        jq --version || echo "jq check failed"
+        
+        echo "=== All checks completed ==="
+
+    - name: Test File Operations
+      run: |
+        echo "Testing file operations..."
+        echo "test123" > /tmp/test-file.txt
+        cat /tmp/test-file.txt
+        rm /tmp/test-file.txt
+        echo "File operations OK"
+
+    - name: Test Docker Run
+      run: |
+        echo "Testing Docker run..."
+        docker run --rm hello-world || echo "Docker run failed"
+        echo "Docker test complete"
+
+    - name: Summary
+      run: |
+        echo "# Diagnostic Complete" >> $GITHUB_STEP_SUMMARY
+        echo "Check the logs above to see which command failed" >> $GITHUB_STEP_SUMMARY
