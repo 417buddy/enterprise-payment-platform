@@ -13,7 +13,6 @@ jobs:
     steps:
     - name: 1. Checkout Code
       uses: actions/checkout@v4
-      continue-on-error: true
 
     - name: 2. Show Environment
       run: |
@@ -25,25 +24,21 @@ jobs:
     - name: 3. Check Tools
       run: |
         echo "=== Tools ==="
-        echo "Git: $(git --version 2>&1 || echo 'not found')"
-        echo "Docker: $(docker --version 2>&1 || echo 'not found')"
+        echo "Git: $(git --version)"
+        echo "Docker: $(docker --version)"
         echo "Success!"
 
-    - name: 4. Create Build Artifact
+    - name: 4. Build Test
       run: |
         echo "=== Build ==="
         mkdir -p build
         echo "Build successful" > build/result.txt
+        cat build/result.txt
         echo "Build completed!"
 
-    - name: 5. Upload Artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: build-output
-        path: build/
-        retention-days: 1
-
-    - name: 6. Summary
+    - name: 5. Summary
       run: |
         echo "# Build Successful" >> $GITHUB_STEP_SUMMARY
         echo "Pipeline completed without errors!" >> $GITHUB_STEP_SUMMARY
+        echo ""
+        echo "Note: Artifact upload disabled due to quota limits"
